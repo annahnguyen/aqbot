@@ -1,22 +1,14 @@
 import tweepy
 import time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from credentials import *
-from datetime import datetime
-from threading import Timer
 
-#x = datetime.today()
-#y = x.replace(day=x.day+1, hour=1, minute=0, second=0, microsecond=0)
-#delta_t = y - x
-#t = Timer(secs, )
+CONSUMER_KEY = 'l5C8MuU5eR8fzXsr1Gzimhj56'
+CONSUMER_SECRET = 'I2J0HiTHJYtY8Zy1Onqi1pf2AiKInaE4HvTpXWwmY6WwsKXDwg'
+ACCESS_KEY = '1311317261160857601-I0BAoKPSi47EK1zGfjRgqkrFscAdhU'
+ACCESS_SECRET = 'EYCkVPThZmnl9erEb0NCCeVGnj84wIA46YW0bljK6JhOW'
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
-api = tweepy.API(auth, wait_on_rate_limit=True)
-
-driver = webdriver.Firefox()
-driver.get("https://iqair.com/us/usa/oregon/eugene")
+api = tweepy.API(auth)
 
 FILE_NAME = 'last_id.txt'
 
@@ -42,21 +34,12 @@ def reply_to_tweets():
 		last_id = mention.id
 		store_last_id(last_id, FILE_NAME)
 
-		if 'air in eugene' in mention.full_text.lower():
-			print('found air in eugene')
+		if '#helloworld' in mention.full_text.lower():
+			print('found #helloworld!')
 			print('responding back...')
-			aqi = get_aqi(driver)
 			api.update_status('@' + mention.user.screen_name + 
-				' The AQI is ' + aqi +'. Stay safe!', mention.id)
-
-def get_aqi(driver):
-	aq = ''
-	driver.refresh()
-	value = driver.find_element(By.CLASS_NAME, "aqi-value__value")
-	quality = driver.find_element(By.CLASS_NAME, "aqi-status__text")
-	aq = value.text + ' (' + quality.text + ')'
-	return aq
+				' hello world back to you!', mention.id)
 
 while True:
 	reply_to_tweets()
-	time.sleep(20)
+	time.sleep(15)
